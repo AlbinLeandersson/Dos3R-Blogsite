@@ -1,0 +1,34 @@
+<!-- edit.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <title>Edit Post</title>
+</head>
+
+<body>
+    <%- include('header') %>
+
+        <h1 class="page-header">Edit Post</h1>
+
+        <div class="edit-container">
+            <form method="POST" action="/edit/<%= id %>" class="edit-form">
+                <div class="edit-title">
+                    <label for="title">Title:</label><br>
+                    <input class="title-input" type="text" id="title" name="title" value="<%= post.title %>"
+                        required><br><br>
+                </div>
+                <label for="content">Edit Your Post Below:</label><br>
+                <textarea id="content" name="content" rows="4" required
+                    style="width: 100%; height: 100%;"><%= post.content %></textarea><br><br>
+                <button class="update-input" type="submit">Update Post</button>
+            </form>
+        </div>
+
+</body>
+
+</html>

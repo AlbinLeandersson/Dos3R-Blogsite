@@ -1,0 +1,18 @@
+<!-- views/profile.ejs -->
+
+<%- include('header') %>
+
+    <h1 class="page-header">
+        <%= username %>'s Blogpage
+    </h1>
+
+    <div class="about-container">
+        <h2 class="about-header">About Me</h2>
+        <form class="profile-form" action="/profile" method="POST">
+            <textarea name="description" rows="4" cols="50"><%= userDescription %></textarea>
+            <br>
+            <button class="description-input" type="submit">Update Description</button>
+        </form>
+
+        <a class="logout-input" href="/logout">Logout</a>
+    </div>

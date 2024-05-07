@@ -1,0 +1,49 @@
+<!-- userPosts.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <title>
+        <%= username %>'s Posts
+    </title>
+</head>
+
+<body>
+    <%- include('header') %>
+
+        <main>
+            <section class="user-posts">
+                <div class="post-list">
+                    <% if (userPosts.length> 0) { %>
+                        <ul>
+                            <% userPosts.forEach((post, index)=> { %>
+                                <div class="post">
+                                    <h3>
+                                        <%= post.title %>
+                                    </h3>
+                                    <!-- Use split to preserve paragraph breaks -->
+                                    <% const paragraphs=post.content.split('\n'); %>
+                                        <% paragraphs.forEach(paragraph=> { %>
+                                            <p>
+                                                <%= paragraph %>
+                                            </p>
+                                            <% }); %>
+                                                <p class="post-details">
+                                                    Posted by <%= post.author %>
+                                                </p>
+                                </div>
+                                <% }); %>
+                        </ul>
+                        <% } else { %>
+                            <p class="no-post-usr">No posts found for <%= username %>.</p>
+                            <% } %>
+                </div>
+            </section>
+        </main>
+</body>
+
+</html>

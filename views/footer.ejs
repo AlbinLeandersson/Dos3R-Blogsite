@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <title>Document</title>
+</head>
+<body>
+
+    <footer id="main-footer">
+        <p>&copy; <span id="currentYear"></span> Dos3R's Blogsite</p>
+    </footer>
+
+    <!-- JavaScript to set current year -->
+    <script>
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+        
+        // Update the content of the span element with the current year
+        document.getElementById('currentYear').textContent = currentYear;
+    </script>
+    
+</body>
+</html>
