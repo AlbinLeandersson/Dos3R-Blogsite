@@ -11,59 +11,52 @@
 <body>
     <%- include('header') %>
 
-        <main>
-            <h1 class="page-header">Latest Posts</h1>
-            <!-- Section for Latest Posts -->
-            <section class="latest posts">
-                <div class="post-list">
-                    <!-- List of posts -->
-                    <% if (posts.length> 0) { %>
-                        <ul>
-                            <% posts.slice(0, 1).forEach((post, index)=> { %>
-                                <div class="post">
-                                    <h3>
-                                        <%= post.title %>
-                                    </h3>
-                                    <!-- Use split to preserve paragraph breaks -->
-                                    <% const paragraphs=post.content.split('\n'); %>
-                                        <% paragraphs.forEach(paragraph=> { %>
-                                            <p>
-                                                <%= paragraph %>
-                                            </p>
-                                            <% }); %>
-                                                <p class="post-details">
-                                                    Posted by <%= post.author %>
-                                                </p>
-                                </div>
-                                <div>
-                                    <button class="edit-post" onclick="window.location.href='/edit/<%= index %>'">Edit
-                                        Post</button>
-                                    <form method="POST" action="/delete/<%= index %>">
-                                        <button type="submit" class="delete-post">Delete Post</button>
-                                    </form>
-                                </div>
+    <main>
+        <h1 class="page-header">Latest Posts</h1>
+        <!-- Section for Latest Posts -->
+        <section class="latest posts">
+            <div class="post-list">
+                <!-- List of posts -->
+                <% if (posts.length > 0) { %>
+                    <ul>
+                        <% posts.slice(0, 1).forEach((post, index) => { %>
+                            <div class="post">
+                                <h3>
+                                    <%= post.title %>
+                                </h3>
+                                <!-- Use split to preserve paragraph breaks -->
+                                <% const paragraphs = post.content.split('\n'); %>
+                                <% paragraphs.forEach(paragraph => { %>
+                                    <p>
+                                        <%= paragraph %>
+                                    </p>
                                 <% }); %>
-                        </ul>
-                        <% } else { %>
-                            <ul class="no-post-list">
-                                <p class="no-posts">No posts available</p>
-                                <a class="create-post" href="/post">Create A New Post</a>
-                            </ul>
-                            <% } %>
-                </div>
-            </section>
+                                <p class="post-details">
+                                    Posted by <a href="/userPosts/<%= post.author %>"><%= post.author %></a>
+                                </p>
+                            </div>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <ul class="no-post-list">
+                        <p class="no-posts">No posts available</p>
+                        <a class="create-post" href="/post">Create A New Post</a>
+                    </ul>
+                <% } %>
+            </div>
+        </section>
 
-            <!-- Section for About -->
-            <section class="about-rules">
-                <h2>About Dos3R</h2>
-                <ul class="about-list">
-                    <li>He sees everything</li>
-                    <li>He knows everything</li>
-                    <li>All above is True ;)</li>
-                </ul>
-            </section>
+        <!-- Section for About -->
+        <section class="about-rules">
+            <h2>About Dos3R</h2>
+            <ul class="about-list">
+                <li>He sees everything</li>
+                <li>He knows everything</li>
+                <li>All above is True ;)</li>
+            </ul>
+        </section>
 
-        </main>
+    </main>
 </body>
 
 </html>

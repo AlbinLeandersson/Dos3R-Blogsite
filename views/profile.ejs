@@ -8,6 +8,11 @@
 
     <div class="about-container">
         <h2 class="about-header">About Me</h2>
+        <% if (message) { %>
+            <div class="<%= message.type %>">
+                <%= message.content %>
+            </div>
+        <% } %>
         <form class="profile-form" action="/profile" method="POST">
             <textarea name="description" rows="4" cols="50"><%= userDescription %></textarea>
             <br>

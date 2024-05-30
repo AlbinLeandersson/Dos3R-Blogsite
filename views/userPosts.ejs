@@ -1,5 +1,3 @@
-<!-- userPosts.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,35 +13,43 @@
 <body>
     <%- include('header') %>
 
-        <main>
-            <section class="user-posts">
-                <div class="post-list">
-                    <% if (userPosts.length> 0) { %>
-                        <ul>
-                            <% userPosts.forEach((post, index)=> { %>
-                                <div class="post">
-                                    <h3>
-                                        <%= post.title %>
-                                    </h3>
-                                    <!-- Use split to preserve paragraph breaks -->
-                                    <% const paragraphs=post.content.split('\n'); %>
-                                        <% paragraphs.forEach(paragraph=> { %>
-                                            <p>
-                                                <%= paragraph %>
-                                            </p>
-                                            <% }); %>
-                                                <p class="post-details">
-                                                    Posted by <%= post.author %>
-                                                </p>
-                                </div>
+    <main>
+        <section class="user-posts">
+            <div class="post-list">
+                <% if (userPosts.length > 0) { %>
+                    <ul>
+                        <% userPosts.forEach((post, index) => { %>
+                            <div class="post">
+                                <h3>
+                                    <%= post.title %>
+                                </h3>
+                                <!-- Use split to preserve paragraph breaks -->
+                                <% const paragraphs = post.content.split('\n'); %>
+                                <% paragraphs.forEach(paragraph => { %>
+                                    <p>
+                                        <%= paragraph %>
+                                    </p>
                                 <% }); %>
-                        </ul>
-                        <% } else { %>
-                            <p class="no-post-usr">No posts found for <%= username %>.</p>
+                                <p class="post-details">
+                                    Posted by <%= post.author %>
+                                </p>
+                            </div>
+                            <% if (isOwner) { %>
+                                <div>
+                                    <button class="edit-post" onclick="window.location.href='/edit/<%= index %>'">Edit Post</button>
+                                    <form method="POST" action="/delete/<%= index %>">
+                                        <button type="submit" class="delete-post">Delete Post</button>
+                                    </form>
+                                </div>
                             <% } %>
-                </div>
-            </section>
-        </main>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <p class="no-post-usr">No posts found for <%= username %>.</p>
+                <% } %>
+            </div>
+        </section>
+    </main>
 </body>
 
 </html>

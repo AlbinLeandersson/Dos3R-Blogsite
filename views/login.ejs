@@ -16,6 +16,11 @@
         <h1 class="page-header">Login</h1>
 
         <div class="form-container">
+            <% if (message) { %>
+                <div class="<%= message.type %>">
+                    <%= message.content %>
+                </div>
+            <% } %>
             <form method="POST" action="/login" class="login-form">
                 <label class="user-title" for="username">Username:</label><br>
                 <input class="user-input" type="text" id="username" name="username" required><br><br>

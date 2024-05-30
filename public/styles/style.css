@@ -45,9 +45,16 @@ header h1 {
 }
 
 .post-container, 
-.edit-container,
-.about-container {
+.edit-container {
     margin-top: 120px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.about-container {
+    margin-top: 40px;
     height: 100%;
     display: flex;
     flex-direction: column;

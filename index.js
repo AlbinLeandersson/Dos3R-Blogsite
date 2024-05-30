@@ -32,6 +32,14 @@ const requireLogin = (req, res, next) => {
     }
 };
 
+// Password validation function
+const isValidPassword = (password) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    return password.length >= minLength && hasUpperCase && hasNumber;
+};
+
 // Render homepage
 app.get('/', (req, res) => {
     const reversedPosts = posts.slice().reverse();
@@ -40,36 +48,49 @@ app.get('/', (req, res) => {
 
 // Render the user registration form
 app.get('/register', (req, res) => {
-    res.render('register', { username: req.session.user ? req.session.user.username : null });
+    const message = req.session.message;
+    delete req.session.message;
+    res.render('register', { username: req.session.user ? req.session.user.username : null, message });
 });
 
-// Handle user registration
 app.post('/register', (req, res) => {
     const { username, password } = req.body;
     const existingUser = users.find(user => user.username === username);
+
     if (existingUser) {
-        res.redirect('/login');
-    } else {
-        const newUser = { username, password };
-        users.push(newUser);
-        res.redirect('/login');
+        req.session.message = { type: 'error', content: 'User already exists' };
+        return res.redirect('/register');
     }
+
+    if (!isValidPassword(password)) {
+        req.session.message = { type: 'error', content: 'Password must be at least 8 characters long, contain at least one uppercase letter, and one number' };
+        return res.redirect('/register');
+    }
+
+    const newUser = { username, password, description: '' }; // Initialize description
+    users.push(newUser);
+    req.session.message = { type: 'success', content: 'Registration successful! Please log in.' };
+    res.redirect('/login');
 });
+
 
 // Render login form
 app.get('/login', (req, res) => {
-    res.render('login', { username: req.session.user ? req.session.user.username : null });
+    const message = req.session.message;
+    delete req.session.message;
+    res.render('login', { username: req.session.user ? req.session.user.username : null, message });
 });
 
-// Handle user login
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     const user = users.find(user => user.username === username && user.password === password);
+
     if (user) {
         req.session.user = user;
-        req.session.user.description = ''; // Initialize description for the user
+        req.session.message = { type: 'success', content: 'Login successful!' };
         res.redirect('/profile');
     } else {
+        req.session.message = { type: 'error', content: 'Invalid username or password' };
         res.redirect('/login');
     }
 });
@@ -79,16 +100,29 @@ app.post('/login', (req, res) => {
 app.get('/profile', requireLogin, (req, res) => {
     const username = req.session.user ? req.session.user.username : null;
     const userDescription = req.session.user ? req.session.user.description : '';
-    res.render('profile', { username, userDescription });
+    const message = req.session.message;
+    delete req.session.message;
+    res.render('profile', { username, userDescription, message });
 });
 
 // Handle POST request to update user description
 app.post('/profile', requireLogin, (req, res) => {
     const { description } = req.body;
+
     if (!req.session.user) {
         return res.redirect('/login');
     }
-    req.session.user.description = description; // Update user's description in session
+
+    // Update user's description in session
+    req.session.user.description = description;
+
+    // Update user's description in the users array
+    const user = users.find(user => user.username === req.session.user.username);
+
+    if (user) {
+        user.description = description;
+    }
+
     res.redirect('/profile'); // Redirect back to profile page
 });
 
@@ -115,30 +149,30 @@ app.get('/edit/:id', (req, res) => {
 app.post('/edit/:id', (req, res) => {
     const id = req.params.id;
     const { title, content } = req.body;
-    posts[id] = { title, content };
-    res.redirect('/');
+
+    // Validate the post ID
+    if (id >= 0 && id < posts.length) {
+        const post = posts[id];
+        posts[id] = { title, content, author: post.author }; // Preserve the author
+    }
+
+    res.redirect('/userPosts');
 });
 
 // Handle deleting a post
 app.post('/delete/:id', (req, res) => {
     const id = req.params.id;
     posts.splice(id, 1);
-    res.redirect('/');
+    res.redirect('/userPosts');
 });
 
 // Render the user's posts
-app.get('/userPosts', (req, res) => {
-    // Check if the user is logged in
-    if (!req.session.user) {
-        return res.redirect('/login'); // Redirect to login if user is not logged in
-    }
+app.get('/userPosts/:username', (req, res) => {
+    const { username } = req.params;
+    const userPosts = posts.filter(post => post.author === username);
+    const isOwner = req.session.user && req.session.user.username === username;
 
-    const username = req.session.user ? req.session.user.username : null;
-    // Retrieve posts created by the logged-in user (assuming each post has an 'author' field)
-    const userPosts = posts.filter(post => post.author === req.session.user.username);
-
-    // Render the userPosts.ejs template and pass the user's posts
-    res.render('userPosts', { username: req.session.user.username, userPosts });
+    res.render('userPosts', { username, userPosts, isOwner });
 });
 
 // Handle user logout
